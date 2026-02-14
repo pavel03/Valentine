@@ -49,6 +49,7 @@
       direction: rtl;
       font-size: 18px;
       line-height: 1.6;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -64,30 +65,83 @@
   </div>
 
   <div class="card hidden" id="step2">
-    <h2>Choose your present 🎁</h2>
-    <button onclick="choose('Massage / Spa day')">Massage / Spa day</button>
-    <button onclick="choose('Something you’ve wanted')">Something you’ve wanted</button>
-    <button onclick="choose('Surprise me')">Surprise me</button>
+    <h2 class="hebrew">איך אני יכול לפנק אותך היום? 💝</h2>
+    <button onclick="choose('מסאז')">מסאז</button>
+    <button onclick="choose('לקחת אותך לדייט במסעדה')">לקחת אותך לדייט במסעדה</button>
+    <button onclick="choose('סתם להתכרבל איתי מול סדרה טובה')">סתם להתכרבל איתי מול סדרה טובה</button>
   </div>
 
   <div class="card hidden" id="step3">
-    <h2>What should I cook tonight? 🍽️</h2>
-    <button onclick="choose('Pasta')">Pasta</button>
-    <button onclick="choose('Steak')">Steak</button>
-    <button onclick="choose('Your favorite')">Your favorite</button>
-    <p style="margin-top:20px;">No matter what you choose — tonight is about us ❤️</p>
+    <h2 class="hebrew">מה את רוצה לאכול הערב? 🍽️</h2>
+    <button onclick="chooseFinal('פסטה הכי טעימה בעולם')">פסטה הכי טעימה בעולם</button>
+    <button onclick="chooseFinal('פסטה אלי אוליו')">פסטה אלי אוליו</button>
+    <button onclick="chooseFinal('להזמין ממינה טומיי')">להזמין ממינה טומיי</button>
+    <button onclick="chooseFinal('משהו אחר (תגידי לי אחכ)')">משהו אחר (תגידי לי אחכ)</button>
+    <p class="hebrew" style="margin-top:20px;">לא משנה מה תבחרי — הערב שייך לנו ❤️</p>
+  </div>
+
+  <div class="card hidden" id="step4">
+    <h2 class="hebrew">תודה יפה שלי! ❤️</h2>
+    <p class="hebrew">הבחירות שלך נשמרו.</p>
+    <div id="choices" class="hebrew" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 15px; text-align: right;"></div>
+    <p class="hebrew" style="margin-top: 25px; font-size: 17px; line-height: 1.8;">
+      יפה שלי, רוצה שתדעי שאני אוהב אותך הכי בעולם, אני מודה על כל יום שאת איתי ואני מתרגש לקראת הרחבת המשפחה שלנו.<br><br>
+      אוהב אותך עד האינסוף ומעבר לו.<br>
+      פאשה ❤️
+    </p>
   </div>
 
   <script>
+    let choices = {};
+
     function nextStep(current, next) {
       document.getElementById(current).classList.add('hidden');
       document.getElementById(next).classList.remove('hidden');
     }
 
     function choose(choice) {
-      alert("You chose: " + choice);
+      choices.pampering = choice;
+      localStorage.setItem('valentineChoices', JSON.stringify(choices));
       nextStep('step2','step3');
     }
+
+    function chooseFinal(choice) {
+      choices.dinner = choice;
+      localStorage.setItem('valentineChoices', JSON.stringify(choices));
+      sendChoicesToEmail();
+      displayChoices();
+      nextStep('step3','step4');
+    }
+
+    function sendChoicesToEmail() {
+      fetch('https://formspree.io/f/mbdaollg', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          pampering: choices.pampering,
+          dinner: choices.dinner,
+          message: `פינוק: ${choices.pampering}\nארוחת ערב: ${choices.dinner}`
+        })
+      });
+    }
+
+    function displayChoices() {
+      const choicesDiv = document.getElementById('choices');
+      choicesDiv.innerHTML = `
+        <p><strong>פינוק:</strong> ${choices.pampering}</p>
+        <p><strong>ארוחת ערב:</strong> ${choices.dinner}</p>
+      `;
+    }
+
+    // Load saved choices on page load
+    window.onload = function() {
+      const saved = localStorage.getItem('valentineChoices');
+      if (saved) {
+        choices = JSON.parse(saved);
+      }
+    };
   </script>
 
 </body>
