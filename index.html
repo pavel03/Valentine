@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Happy Valentine’s ❤️</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #fff5f7;
+      color: #333;
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .card {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    h1 { color: #d6336c; }
+    button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: #d6336c;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button.secondary {
+      background: #f1f3f5;
+      color: #333;
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+  <div class="card" id="step1">
+    <h1>Happy Valentine’s ❤️</h1>
+    <p>
+      I wanted to do something small but just for you.<br/>
+      You make my life better every single day.
+    </p>
+    <button onclick="nextStep('step1','step2')">Next</button>
+  </div>
+
+  <div class="card hidden" id="step2">
+    <h2>Choose your present 🎁</h2>
+    <button onclick="choose('Massage / Spa day')">Massage / Spa day</button>
+    <button onclick="choose('Something you’ve wanted')">Something you’ve wanted</button>
+    <button onclick="choose('Surprise me')">Surprise me</button>
+  </div>
+
+  <div class="card hidden" id="step3">
+    <h2>What should I cook tonight? 🍽️</h2>
+    <button onclick="choose('Pasta')">Pasta</button>
+    <button onclick="choose('Steak')">Steak</button>
+    <button onclick="choose('Your favorite')">Your favorite</button>
+    <p style="margin-top:20px;">No matter what you choose — tonight is about us ❤️</p>
+  </div>
+
+  <script>
+    function nextStep(current, next) {
+      document.getElementById(current).classList.add('hidden');
+      document.getElementById(next).classList.remove('hidden');
+    }
+
+    function choose(choice) {
+      alert("You chose: " + choice);
+      nextStep('step2','step3');
+    }
+  </script>
+
+</body>
+</html>
